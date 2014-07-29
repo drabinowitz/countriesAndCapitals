@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html ng-app="ccApp">
+<head>
+
+	<title>Countries and Capitals</title>
+
+	<link rel="stylesheet" type="text/css" href="./bower_components/bootstrap/dist/css/bootstrap.css">
+
+	<link rel="stylesheet" type="text/css" href="./cc-app.css">
+
+</head>
+<body>
+
+	<div class="container">
+		
+		<h1 class="page-header">Countries & Capitals</h1>
+
+	</div>
+
+	<div class="row viewRow">
+
+		<div class="col-md-8 col-md-offset-2 viewColumn">
+
+			<div class="viewWindow" ng-view></div>
+
+		</div>
+
+	</div>
+
+	<div class="row" ng-controller="tabCtrl">
+
+		<div class="col-md-4 col-md-offset-4">
+
+			<a href="#!/home"><button ng-class="{hidden:isActive('/home')}">Home</button></a>
+
+			<a href="#!/countries"><button ng-class="{hidden:isActive('/countries')}">Browse Countries</button></a>
+
+		</div>
+
+	</div>
+
+	<script type="text/javascript" src="./bower_components/angular/angular.js"></script>
+
+	<script type="text/javascript" src="./bower_components/angular-route/angular-route.js"></script>
+
+	<script type="text/javascript" src="./bower_components/angular-animate/angular-animate.js"></script>
+
+	<script type="text/javascript" src="./cc-library.js"></script>
+
+	<script type="text/javascript" src="./cc-app-views.js"></script>
+
+	<script type="text/javascript" src="./home/home.js"></script>
+
+	<script type="text/javascript" src="./countries/countries.js"></script>
+
+	<script type="text/javascript" src="./cc-tab.js"></script>
+
+	<script type="text/javascript" src="./cc-app.js"></script>
+
+</body>
+</html>
