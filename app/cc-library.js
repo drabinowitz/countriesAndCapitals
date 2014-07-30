@@ -2,12 +2,12 @@ angular.module('ccLibrary',[]).
 	
 	constant('CC_REQUEST_API','http://api.geonames.org/').
 
-	constant('CC_API_USERNAME','username=drabinowitz').
+	constant('CC_API_SETTINGS','?username=drabinowitz&type=json').
 
 	constant('CC_COUNTRY_INFO','countryInfo').
 
-	factory('ccApiRequest',['$http','$q','CC_REQUEST_API','CC_API_USERNAME',
-						function($http, $q, CC_REQUEST_API, CC_API_USERNAME){
+	factory('ccApiRequest',['$http','$q','CC_REQUEST_API','CC_API_SETTINGS',
+						function($http, $q, CC_REQUEST_API, CC_API_SETTINGS){
 
 		return function(path,queryParams){
 
@@ -25,7 +25,7 @@ angular.module('ccLibrary',[]).
 			
 			var defer = $q.defer();
 
-			$http.get(CC_REQUEST_API + path + '?' + CC_API_USERNAME + queryParamsStr).
+			$http.get(CC_REQUEST_API + path + CC_API_SETTINGS + queryParamsStr).
 
 				success(function(data){
 
