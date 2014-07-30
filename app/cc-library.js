@@ -8,23 +8,15 @@ angular.module('ccLibrary',[]).
 
 		cache : true
 
-/*		params : {
-
-			username:'drabinowitz',
-
-			callback:'JSON_CALLBACK'*/
-
 	}).
-	
-/*	constant('CC_API_URL','http://api.geonames.org/').
 
-	constant('CC_API_METHOD','JSONP'),
+	constant('CC_API_PARAMS','username=drabinowitz&callback=JSON_CALLBACK').
 
-	constant('CC_API_CACHE','')*/
+	constant('CC_API_COUNTRIES_INFO','countryInfoJSON?').
 
-	constant('CC_API_PARAMS','JSON?username=drabinowitz&callback=JSON_CALLBACK').
+	constant('CC_API_COUNTRY_INFO','countryInfoJSON?country={{ countryCode }}&').
 
-	constant('CC_COUNTRY_INFO','countryInfo').
+	constant('CC_API_CAPITAL_INFO','searchJSON?country={{ countryCode }}&q=capital of a political entity&').
 
 	factory('ccApiRequest',['$http','$q','CC_API_URL','CC_API_CONFIG','CC_API_PARAMS','$rootScope','$cacheFactory',
 						function($http, $q, CC_API_URL, CC_API_CONFIG, CC_API_PARAMS, $rootScope, $cacheFactory){
@@ -33,21 +25,9 @@ angular.module('ccLibrary',[]).
 
 		var queryConfig = CC_API_CONFIG;
 
-		return function(path,queryParams){
+		return function(path){
 
-			var queryParamsStr = '';
-
-			if (queryParams){
-
-				for (var attrname in queryParams){
-
-					queryParamsStr += '&' + attrname + '=' + queryParams[attrname];
-
-				}
-
-			}
-
-			queryConfig.url = CC_API_URL + path + CC_API_PARAMS + queryParamsStr;
+			queryConfig.url = CC_API_URL + path + CC_API_PARAMS;
 
 			var cache = cacheEngine.get(queryConfig.url);
 			
@@ -86,11 +66,35 @@ angular.module('ccLibrary',[]).
 
 	}]).
 
-	factory('ccCountryInfo',['ccApiRequest','$q','CC_COUNTRY_INFO',function(ccApiRequest,$q,CC_COUNTRY_INFO){
+	factory('ccCountriesInfo',['ccApiRequest','CC_API_COUNTRIES_INFO',function(ccApiRequest,CC_API_COUNTRIES_INFO){
 
 		return function(){
 
-			return ccApiRequest(CC_COUNTRY_INFO);
+			return ccApiRequest(CC_API_COUNTRIES_INFO);
+
+		};
+
+	}]).
+
+	factory('ccCountryInfo',['ccApiRequest','CC_API_COUNTRY_INFO','$interpolate',function(ccApiRequest,CC_API_COUNTRY_INFO,$interpolate){
+
+		return function(cCode){
+
+			var path = $interpolate(CC_API_COUNTRY_INFO)({countryCode : cCode});
+
+			return ccApiRequest(path);
+
+		};
+
+	}]).
+
+	factory('ccCapitalInfo',['ccApiRequest','CC_API_CAPITAL_INFO','$interpolate',function(ccApiRequest,CC_API_CAPITAL_INFO,$interpolate){
+
+		return function(cCode){
+
+			var path = $interpolate(CC_API_CAPITAL_INFO)({countryCode : cCode});
+
+			return ccApiRequest(path);
 
 		};
 
