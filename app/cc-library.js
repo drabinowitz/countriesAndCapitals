@@ -1,13 +1,37 @@
 angular.module('ccLibrary',[]).
-	
-	constant('CC_REQUEST_API','http://api.geonames.org/').
 
-	constant('CC_API_SETTINGS','?username=drabinowitz&type=json').
+	constant('CC_API_URL','http://api.geonames.org/').
+
+	constant('CC_API_CONFIG',{
+
+		method : 'JSONP',
+
+		cache : true
+
+/*		params : {
+
+			username:'drabinowitz',
+
+			callback:'JSON_CALLBACK'*/
+
+	}).
+	
+/*	constant('CC_API_URL','http://api.geonames.org/').
+
+	constant('CC_API_METHOD','JSONP'),
+
+	constant('CC_API_CACHE','')*/
+
+	constant('CC_API_PARAMS','JSON?username=drabinowitz&callback=JSON_CALLBACK').
 
 	constant('CC_COUNTRY_INFO','countryInfo').
 
-	factory('ccApiRequest',['$http','$q','CC_REQUEST_API','CC_API_SETTINGS',
-						function($http, $q, CC_REQUEST_API, CC_API_SETTINGS){
+	factory('ccApiRequest',['$http','$q','CC_API_URL','CC_API_CONFIG','CC_API_PARAMS','$rootScope','$cacheFactory',
+						function($http, $q, CC_API_URL, CC_API_CONFIG, CC_API_PARAMS, $rootScope, $cacheFactory){
+
+		var cacheEngine = $cacheFactory("geonames");
+
+		var queryConfig = CC_API_CONFIG;
 
 		return function(path,queryParams){
 
@@ -15,19 +39,32 @@ angular.module('ccLibrary',[]).
 
 			if (queryParams){
 
-				angular.forEach(queryParams, function(queryKey,queryValue){
+				for (var attrname in queryParams){
 
-					queryParamsStr += '&' + queryKey + '=' + queryValue;
+					queryParamsStr += '&' + attrname + '=' + queryParams[attrname];
 
-				});
+				}
 
 			}
+
+			queryConfig.url = CC_API_URL + path + CC_API_PARAMS + queryParamsStr;
+
+			var cache = cacheEngine.get(queryConfig.url);
 			
 			var defer = $q.defer();
 
-			$http.get(CC_REQUEST_API + path + CC_API_SETTINGS + queryParamsStr).
+
+			if (cache){
+
+				defer.resolve(cache);
+
+			} else {
+
+				$http(queryConfig).
 
 				success(function(data){
+
+					cacheEngine.put(queryConfig.url,data);
 
 					defer.resolve(data);
 
@@ -37,7 +74,11 @@ angular.module('ccLibrary',[]).
 
 					defer.reject(error);
 
+					$rootScope.$broadcast('error',queryConfig.url,error);
+
 				});
+
+			}
 
 			return defer.promise;
 
@@ -51,6 +92,6 @@ angular.module('ccLibrary',[]).
 
 			return ccApiRequest(CC_COUNTRY_INFO);
 
-		}
+		};
 
 	}]);

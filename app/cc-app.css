@@ -1,3 +1,26 @@
 .hidden{
 	display: none;
 }
+
+.viewWindow {
+	height: 400px;
+	overflow: auto;
+}
+
+th {
+	text-align:center;
+}
+
+td {
+	border:1px solid #ddd;
+	height:50px;
+	max-width: 250px;
+	padding-left: 20px;
+	padding-right: 20px;
+	text-align:center;
+	vertical-align:middle;
+}
+
+.buttons {
+	margin-top: 25px;
+}

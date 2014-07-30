@@ -8,7 +8,7 @@ viewsModule.config(['$routeProvider',function($routeProvider){
 
 		resolve : {
 
-			countryInfo : ['ccCountryInfo', function(ccCountryInfo){
+			countries : ['ccCountryInfo', function(ccCountryInfo){
 
 				return ccCountryInfo();
 
@@ -20,8 +20,8 @@ viewsModule.config(['$routeProvider',function($routeProvider){
 
 }]).
 
-controller('countriesCtrl',['$scope','countryInfo',function($scope,countryInfo){
+controller('countriesCtrl',['$scope','countries',function($scope,countries){
 
-	console.log(countryInfo);
+	$scope.countries = countries.geonames;
 
 }]);
