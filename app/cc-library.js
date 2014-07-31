@@ -16,7 +16,9 @@ angular.module('ccLibrary',[]).
 
 	constant('CC_API_COUNTRY_INFO','countryInfoJSON?country={{ countryCode }}&').
 
-	constant('CC_API_CAPITAL_INFO','searchJSON?country={{ countryCode }}&q=capital of a political entity&').
+	constant('CC_API_CAPITAL_INFO','searchJSON?country={{ countryCode }}&q=capital%20of%20a%20political%20entity&').
+
+	constant('CC_API_NEIGHBORS_INFO','neighboursJSON?country={{ countryCode }}&').
 
 	factory('ccApiRequest',['$http','$q','CC_API_URL','CC_API_CONFIG','CC_API_PARAMS','$rootScope','$cacheFactory',
 						function($http, $q, CC_API_URL, CC_API_CONFIG, CC_API_PARAMS, $rootScope, $cacheFactory){
@@ -42,9 +44,9 @@ angular.module('ccLibrary',[]).
 
 				$http(queryConfig).
 
-				success(function(data){
+				success(function(data,status,headers,config){
 
-					cacheEngine.put(queryConfig.url,data);
+					cacheEngine.put(config.url,data);
 
 					defer.resolve(data);
 
@@ -93,6 +95,18 @@ angular.module('ccLibrary',[]).
 		return function(cCode){
 
 			var path = $interpolate(CC_API_CAPITAL_INFO)({countryCode : cCode});
+
+			return ccApiRequest(path);
+
+		};
+
+	}]).
+
+	factory('ccNeighborsInfo',['ccApiRequest','CC_API_NEIGHBORS_INFO','$interpolate',function(ccApiRequest,CC_API_NEIGHBORS_INFO,$interpolate){
+
+		return function(cCode){
+
+			var path = $interpolate(CC_API_NEIGHBORS_INFO)({countryCode : cCode});
 
 			return ccApiRequest(path);
 

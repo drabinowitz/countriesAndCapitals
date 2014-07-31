@@ -1,1 +1,25 @@
-<p>content coming soon</p>
+<h2 class="countryName">{{ country.countryName }}</h2>
+
+<div class="countryFacts">
+	
+	<p>Population of Country: {{ country.population | number }}</p>
+
+	<p>Area: {{ country.areaInSqKm | number }} square km</p>
+
+	<p>Capital: {{ capital.name }}</p>
+
+	<p>Population of Capital: {{ capital.population | number }}</p>
+		
+	<p>
+	
+		{{ neighbors.length }} Neighbors: 
+
+		<a ng-repeat="neighbor in neighbors" ng-href="#!/countries/{{ neighbor.countryCode }}">{{ neighbor.countryName }} </a>
+
+	</p>
+
+	<img ng-src="http://www.geonames.org/flags/x/{{ country.countryCode | lowercase }}.gif" />
+
+	<img ng-src="http://www.geonames.org/img/country/250/{{ country.countryCode }}.png" />
+
+</div>

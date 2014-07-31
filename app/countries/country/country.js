@@ -8,7 +8,7 @@ viewsModule.config(['$routeProvider',function($routeProvider){
 
 		resolve : {
 
-			currentContext : ['$q','$route','ccCurrentCountry','ccCountryInfo',function($q,$route,ccCurrentCountry,ccCountryInfo){
+			countryInfo : ['$q','$route','ccCurrentCountry','ccCountryInfo',function($q,$route,ccCurrentCountry,ccCountryInfo){
 
 				var currentCountry = ccCurrentCountry.get();
 
@@ -20,13 +20,15 @@ viewsModule.config(['$routeProvider',function($routeProvider){
 
 					var defer = $q.defer();
 
-					ccCountryInfo( $route.current.params.country ).then(function(data){
+					ccCountryInfo( $route.current.params.country ).
+
+					then(function(data){
 
 						ccCurrentCountry.set( data.geonames[0] );
 
 						defer.resolve( ccCurrentCountry.get() );
 
-					})
+					});
 
 					return defer.promise; 
 
@@ -34,9 +36,25 @@ viewsModule.config(['$routeProvider',function($routeProvider){
 
 			}],
 
-			countryInfo : ['$route','ccCapitalInfo', function($route,ccCapitalInfo){
+			capitalInfo : ['$q','$route','ccCapitalInfo', function($q,$route,ccCapitalInfo){
 
-				return ccCapitalInfo( $route.current.params.country );
+				var defer = $q.defer();
+
+				ccCapitalInfo( $route.current.params.country ).
+
+				then(function(data){
+
+					defer.resolve( data.geonames[0] );
+
+				});
+
+				return defer.promise;
+
+			}],
+
+			neighborsInfo : ['$route','ccNeighborsInfo',function($route,ccNeighborsInfo){
+
+				return ccNeighborsInfo( $route.current.params.country );
 
 			}]
 
@@ -46,10 +64,12 @@ viewsModule.config(['$routeProvider',function($routeProvider){
 
 }]).
 
-controller('countryCtrl',['$scope','currentContext','countryInfo',function($scope,currentContext,countryInfo){
+controller('countryCtrl',['$scope','countryInfo','capitalInfo','neighborsInfo',function($scope,countryInfo,capitalInfo,neighborsInfo){
 
-	console.log(currentContext);
+	$scope.country = countryInfo;
 
-	console.log(countryInfo);
+	$scope.capital = capitalInfo;
+
+	$scope.neighbors = neighborsInfo.geonames;
 
 }]);
