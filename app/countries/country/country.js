@@ -64,12 +64,14 @@ viewsModule.config(['$routeProvider',function($routeProvider){
 
 }]).
 
-controller('countryCtrl',['$scope','countryInfo','capitalInfo','neighborsInfo',function($scope,countryInfo,capitalInfo,neighborsInfo){
+controller('countryCtrl',['$scope','publisher','countryInfo','capitalInfo','neighborsInfo',function($scope,publisher,countryInfo,capitalInfo,neighborsInfo){
 
 	$scope.country = countryInfo;
 
 	$scope.capital = capitalInfo;
 
 	$scope.neighbors = neighborsInfo.geonames;
+
+	publisher.broadcast('viewReady');
 
 }]);

@@ -20,16 +20,20 @@ viewsModule.config(['$routeProvider',function($routeProvider){
 
 }]).
 
-controller('countriesCtrl',['$scope','$location','countries','ccCurrentCountry',function($scope,$location,countries,ccCurrentCountry){
+controller('countriesCtrl',['$scope','publisher','$location','countries','ccCurrentCountry',function($scope,publisher,$location,countries,ccCurrentCountry){
 
 	$scope.countries = countries.geonames;
 
 	$scope.countryDetails = function(targetCountry){
+
+		publisher.broadcast('viewLoading');
 
 		ccCurrentCountry.set( targetCountry );
 
 		$location.path('/countries/' + targetCountry.countryCode)
 
 	}
+
+	publisher.broadcast('viewReady');
 
 }]);

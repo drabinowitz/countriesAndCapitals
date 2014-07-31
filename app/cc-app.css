@@ -3,24 +3,55 @@
 }
 
 .viewWindow {
-	height: 400px;
+	height: 600px;
 	overflow: auto;
+	overflow-x: hidden;
 }
 
 th {
 	text-align:center;
 }
 
+tbody tr:hover {
+	background: rgb(66, 66, 218);
+	color: white;
+	cursor: pointer;
+}
+
 td {
 	border:1px solid #ddd;
 	height:50px;
-	max-width: 250px;
 	padding-left: 20px;
 	padding-right: 20px;
 	text-align:center;
 	vertical-align:middle;
 }
 
+.countryImage {
+	max-width: 230px;
+	margin: 10px;
+}
+
 .buttons {
-	margin-top: 25px;
+	position: fixed;
+	top: 100px;
+	width: 165px;
+}
+
+.buttons a{
+	text-decoration: none;
+}
+
+.buttons button {
+	display: block;
+	width: 100%;
+	margin: 10px;
+	border: none;
+	background: rgb(56, 56, 219);
+	color: white;
+	height: 30px;
+}
+
+.buttons button:hover {
+	background: rgb(20, 20, 82);
 }
