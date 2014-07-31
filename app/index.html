@@ -9,7 +9,7 @@
 	<link rel="stylesheet" type="text/css" href="./cc-app.css">
 
 </head>
-<body>
+<body ng-controller="tabCtrl">
 
 	<div class="container">
 		
@@ -19,6 +19,8 @@
 
 			<div class="col-md-8 col-md-offset-2 viewColumn">
 
+				<div id="loadingOverlay" ng-show="loading" class="viewWindow"><img src="./ajax-loader.gif"></div>
+
 				<div class="viewWindow" ng-view></div>
 
 			</div>
@@ -27,7 +29,7 @@
 
 	</div>
 
-	<div class="buttons" ng-controller="tabCtrl">
+	<div class="buttons">
 
 		<a href="#!/home"><button ng-class="{hidden:isActive('/home')}">Home</button></a>
 
@@ -43,8 +45,6 @@
 
 	<script type="text/javascript" src="./cc-library.js"></script>
 
-	<script type="text/javascript" src="./cc-app-context.js"></script>
-
 	<script type="text/javascript" src="./cc-app-views.js"></script>
 
 	<script type="text/javascript" src="./home/home.js"></script>
@@ -52,8 +52,6 @@
 	<script type="text/javascript" src="./countries/countries.js"></script>
 
 	<script type="text/javascript" src="./countries/country/country.js"></script>
-
-	<script type="text/javascript" src="./cc-tab.js"></script>
 
 	<script type="text/javascript" src="./cc-app.js"></script>
 

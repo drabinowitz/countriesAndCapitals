@@ -8,6 +8,13 @@
 	overflow-x: hidden;
 }
 
+#loadingOverlay {
+	z-index: 200;
+	text-align: center;
+	padding-top: 30%;
+	background-color: rgba(223, 225, 226, 0.51);
+}
+
 th {
 	text-align:center;
 }

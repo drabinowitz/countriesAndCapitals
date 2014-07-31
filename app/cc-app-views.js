@@ -1,15 +1,27 @@
-var viewsModule = angular.module('ccAppViews', ['ngRoute','ngAnimate','ccLibrary','ccAppContext']);
+var viewsModule = angular.module('ccAppViews', ['ngRoute','ngAnimate','ccLibrary']);
 
-	viewsModule.factory('publisher',['$rootScope',function($rootScope){
+	viewsModule.
+
+	factory('ccCurrentCountry',[function(){
+
+		var country;
 
 		return {
 
-			broadcast : function(event,args){
+			set : function(currentCountry){
 
-				$rootScope.$broadcast(event,args)
+				country = currentCountry;
+
+				return true;
+
+			},
+
+			get : function(){
+
+				return country;
 
 			}
 
-		}
+		};
 
 	}]);
