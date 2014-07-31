@@ -2,17 +2,22 @@
 	display: none;
 }
 
+.viewColumn {
+	position: relative;
+}
+
 .viewWindow {
 	height: 600px;
 	overflow: auto;
 	overflow-x: hidden;
+	position: absolute;
 }
 
 #loadingOverlay {
 	z-index: 200;
 	text-align: center;
 	padding-top: 30%;
-	background-color: rgba(223, 225, 226, 0.51);
+	width: 100%;
 }
 
 th {
