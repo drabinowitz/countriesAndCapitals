@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html ng-app="ccApp">
+<head>
+
+	<title>Countries and Capitals</title>
+
+	<link rel="stylesheet" href="./_assets/combined-edadc20c.css"/>
+
+</head>
+<body ng-controller="tabCtrl">
+
+	<div class="container">
+		
+		<h1 class="page-header">Countries & Capitals</h1>
+
+		<div class="row viewRow">
+
+			<div class="col-md-8 col-md-offset-2 viewColumn">
+
+				<div id="loadingOverlay" ng-show="loading" class="viewWindow"><img src="./ajax-loader.gif"></div>
+
+				<div class="viewWindow" ng-view></div>
+
+			</div>
+
+		</div>
+
+	</div>
+
+	<div class="buttons">
+
+		<a href="#!/home"><button ng-class="{hidden:isActive('/home')}">Home</button></a>
+
+		<a href="#!/countries"><button ng-class="{hidden:isActive('/countries')}">Browse Countries</button></a>
+
+	</div>
+
+	<script src="./_assets/combined-1d800f50.js"></script>
+
+</body>
+</html>
