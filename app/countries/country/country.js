@@ -8,47 +8,15 @@ viewsModule.config(['$routeProvider',function($routeProvider){
 
 		resolve : {
 
-			countryInfo : ['$q','$route','ccCurrentCountry','ccCountryInfo',function($q,$route,ccCurrentCountry,ccCountryInfo){
+			countryInfo : ['$route','ccCountryInfo',function($route,ccCountryInfo){
 
-				var currentCountry = ccCurrentCountry.get();
-
-				if( currentCountry && currentCountry.countryCode == $route.current.params.country ){
-
-					return currentCountry;
-
-				} else {
-
-					var defer = $q.defer();
-
-					ccCountryInfo( $route.current.params.country ).
-
-					then(function(data){
-
-						ccCurrentCountry.set( data.geonames[0] );
-
-						defer.resolve( ccCurrentCountry.get() );
-
-					});
-
-					return defer.promise; 
-
-				}
+				return ccCountryInfo( $route.current.params.country );
 
 			}],
 
-			capitalInfo : ['$q','$route','ccCapitalInfo', function($q,$route,ccCapitalInfo){
+			capitalInfo : ['$route','ccCapitalInfo', function($route,ccCapitalInfo){
 
-				var defer = $q.defer();
-
-				ccCapitalInfo( $route.current.params.country ).
-
-				then(function(data){
-
-					defer.resolve( data.geonames[0] );
-
-				});
-
-				return defer.promise;
+				return ccCapitalInfo( $route.current.params.country );
 
 			}],
 
@@ -66,9 +34,9 @@ viewsModule.config(['$routeProvider',function($routeProvider){
 
 controller('countryCtrl',['$scope','countryInfo','capitalInfo','neighborsInfo',function($scope,countryInfo,capitalInfo,neighborsInfo){
 
-	$scope.country = countryInfo;
+	$scope.country = countryInfo.geonames[0];
 
-	$scope.capital = capitalInfo;
+	$scope.capital = capitalInfo.geonames[0];
 
 	$scope.neighbors = neighborsInfo.geonames;
 

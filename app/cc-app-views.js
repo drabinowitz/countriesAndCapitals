@@ -1,6 +1,6 @@
 var viewsModule = angular.module('ccAppViews', ['ngRoute','ngAnimate','ccLibrary']);
 
-	viewsModule.
+/*	viewsModule.
 
 	factory('ccCurrentCountry',[function(){
 
@@ -24,4 +24,4 @@ var viewsModule = angular.module('ccAppViews', ['ngRoute','ngAnimate','ccLibrary
 
 		};
 
-	}]);
+	}]);*/

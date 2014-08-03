@@ -8,7 +8,7 @@ angular.module('ccTab',[]).
 
 		};
 
-		$scope.$on('viewLoading',function(){
+/*		$scope.$on('viewLoading',function(){
 
 			console.log('caught Loading');
 
@@ -18,6 +18,6 @@ angular.module('ccTab',[]).
 
 			console.log('caught ready');
 
-		});
+		});*/
 
 	}]);

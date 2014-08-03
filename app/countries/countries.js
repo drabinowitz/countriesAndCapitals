@@ -20,15 +20,15 @@ viewsModule.config(['$routeProvider',function($routeProvider){
 
 }]).
 
-controller('countriesCtrl',['$scope','$location','countries','ccCurrentCountry',function($scope,$location,countries,ccCurrentCountry){
+controller('countriesCtrl',['$scope','$location','pubSub','countries',function($scope,$location,pubSub,countries){
 
 	$scope.countries = countries.geonames;
 
 	$scope.countryDetails = function(targetCountry){
 
-		ccCurrentCountry.set( targetCountry );
+		pubSub.broadcast('targetCountry',targetCountry);
 
-		$location.path('/countries/' + targetCountry.countryCode)
+		$location.path('/countries/' + targetCountry.countryCode);
 
 	}
 

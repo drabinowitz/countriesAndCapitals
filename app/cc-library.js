@@ -20,10 +20,52 @@ angular.module('ccLibrary',[]).
 
 	constant('CC_API_NEIGHBORS_INFO','neighboursJSON?country={{ countryCode }}&').
 
-	factory('ccApiRequest',['$http','$q','CC_API_URL','CC_API_CONFIG','CC_API_PARAMS','$rootScope','$cacheFactory',
-						function($http, $q, CC_API_URL, CC_API_CONFIG, CC_API_PARAMS, $rootScope, $cacheFactory){
+	factory('pubSub',['$rootScope',function($rootScope){
+
+		return {
+
+			broadcast : function(event,args){
+
+				$rootScope.$broadcast(event,args);
+
+			},
+
+			listen : function(event,action){
+
+				$rootScope.$on(event,action);
+
+			}
+
+		}
+
+	}]).
+
+	factory('ccApiCache',['$cacheFactory',function($cacheFactory){
 
 		var cacheEngine = $cacheFactory("geonames");
+
+		return {
+
+			get : function(key){
+
+				return cacheEngine.get( key );
+
+			},
+
+			put : function(key,data){
+
+				cacheEngine.put( key,data );
+
+			}
+
+		};		
+
+	}]).
+
+	factory('ccApiRequest',['$http','$q','CC_API_URL','CC_API_CONFIG','CC_API_PARAMS','$rootScope','ccApiCache',
+						function($http, $q, CC_API_URL, CC_API_CONFIG, CC_API_PARAMS, $rootScope, ccApiCache){
+
+
 
 		var queryConfig = CC_API_CONFIG;
 
@@ -31,7 +73,7 @@ angular.module('ccLibrary',[]).
 
 			queryConfig.url = CC_API_URL + path + CC_API_PARAMS;
 
-			var cache = cacheEngine.get(queryConfig.url);
+			var cache = ccApiCache.get(queryConfig.url);
 			
 			var defer = $q.defer();
 
@@ -46,7 +88,7 @@ angular.module('ccLibrary',[]).
 
 				success(function(data,status,headers,config){
 
-					cacheEngine.put(config.url,data);
+					ccApiCache.put(config.url,data);
 
 					defer.resolve(data);
 
@@ -78,7 +120,16 @@ angular.module('ccLibrary',[]).
 
 	}]).
 
-	factory('ccCountryInfo',['ccApiRequest','CC_API_COUNTRY_INFO','$interpolate',function(ccApiRequest,CC_API_COUNTRY_INFO,$interpolate){
+	factory('ccCountryInfo',['ccApiCache','ccApiRequest','CC_API_COUNTRY_INFO','$interpolate','pubSub',
+							function(ccApiCache,ccApiRequest,CC_API_COUNTRY_INFO,$interpolate,pubSub){
+
+		pubSub.listen('targetCountry',function(country){
+
+			var path = $interpolate(CC_API_COUNTRY_INFO)({countryCode : country.countryCode});
+
+			ccApiCache.put( path,country );
+
+		});
 
 		return function(cCode){
 
