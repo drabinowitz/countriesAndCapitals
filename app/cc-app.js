@@ -12,7 +12,7 @@ angular.module('ccApp',['ngRoute','ngAnimate','ccAppViews']).
 
 	}]).
 
-	controller('tabCtrl',['$scope','$location',function($scope,$location){
+	controller('tabCtrl',['$scope','$location','ccCountryInfo',function($scope,$location,ccCountryInfo){
 
 		$scope.isActive = function(route) {
 
@@ -31,6 +31,12 @@ angular.module('ccApp',['ngRoute','ngAnimate','ccAppViews']).
 			$scope.loading = false;
 
 			console.log('finished loading');
+
+		});
+
+		$scope.$on('targetCountry',function(event,targetCountry){
+
+			ccCountryInfo.cache( targetCountry );
 
 		});
 

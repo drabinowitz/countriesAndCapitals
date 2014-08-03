@@ -20,13 +20,15 @@ viewsModule.config(['$routeProvider',function($routeProvider){
 
 }]).
 
-controller('countriesCtrl',['$scope','$location','countries','ccCountryInfo',function($scope,$location,countries,ccCountryInfo){
+controller('countriesCtrl',['$rootScope','$scope','$location','countries',function($rootScope,$scope,$location,countries){
 
 	$scope.countries = countries.geonames;
 
 	$scope.countryDetails = function(targetCountry){
 
-		ccCountryInfo.cache( targetCountry );
+/*		ccCountryInfo.cache( targetCountry );*/
+
+		$rootScope.$broadcast('targetCountry',targetCountry);
 
 		$location.path('/countries/' + targetCountry.countryCode);
 
