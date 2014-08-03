@@ -10,19 +10,19 @@ viewsModule.config(['$routeProvider',function($routeProvider){
 
 			countryInfo : ['$route','ccCountryInfo',function($route,ccCountryInfo){
 
-				return ccCountryInfo( $route.current.params.country );
+				return ccCountryInfo.get( $route.current.params.country );
 
 			}],
 
 			capitalInfo : ['$route','ccCapitalInfo', function($route,ccCapitalInfo){
 
-				return ccCapitalInfo( $route.current.params.country );
+				return ccCapitalInfo.get( $route.current.params.country );
 
 			}],
 
 			neighborsInfo : ['$route','ccNeighborsInfo',function($route,ccNeighborsInfo){
 
-				return ccNeighborsInfo( $route.current.params.country );
+				return ccNeighborsInfo.get( $route.current.params.country );
 
 			}]
 
@@ -34,7 +34,7 @@ viewsModule.config(['$routeProvider',function($routeProvider){
 
 controller('countryCtrl',['$scope','countryInfo','capitalInfo','neighborsInfo',function($scope,countryInfo,capitalInfo,neighborsInfo){
 
-	$scope.country = countryInfo.geonames[0];
+	$scope.country = countryInfo;
 
 	$scope.capital = capitalInfo.geonames[0];
 

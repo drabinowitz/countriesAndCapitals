@@ -12,7 +12,7 @@ angular.module('ccApp',['ngRoute','ngAnimate','ccAppViews']).
 
 	}]).
 
-	controller('tabCtrl',['$scope','$location','pubSub',function($scope,$location,pubSub){
+	controller('tabCtrl',['$scope','$location',function($scope,$location){
 
 		$scope.isActive = function(route) {
 
@@ -20,13 +20,13 @@ angular.module('ccApp',['ngRoute','ngAnimate','ccAppViews']).
 
 		};
 
-		pubSub.listen('$routeChangeStart',function(){
+		$scope.$on('$routeChangeStart',function(){
 
 			$scope.loading = true;
 
 		});
 
-		pubSub.listen('$routeChangeSuccess',function(){
+		$scope.$on('$routeChangeSuccess',function(){
 
 			$scope.loading = false;
 

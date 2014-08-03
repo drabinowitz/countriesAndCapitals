@@ -10,7 +10,7 @@ viewsModule.config(['$routeProvider',function($routeProvider){
 
 			countries : ['ccCountriesInfo', function(ccCountriesInfo){
 
-				return ccCountriesInfo();
+				return ccCountriesInfo.get();
 
 			}]
 
@@ -20,13 +20,13 @@ viewsModule.config(['$routeProvider',function($routeProvider){
 
 }]).
 
-controller('countriesCtrl',['$scope','$location','pubSub','countries',function($scope,$location,pubSub,countries){
+controller('countriesCtrl',['$scope','$location','countries','ccCountryInfo',function($scope,$location,countries,ccCountryInfo){
 
 	$scope.countries = countries.geonames;
 
 	$scope.countryDetails = function(targetCountry){
 
-		pubSub.broadcast('targetCountry',targetCountry);
+		ccCountryInfo.cache( targetCountry );
 
 		$location.path('/countries/' + targetCountry.countryCode);
 

@@ -20,7 +20,7 @@ angular.module('ccLibrary',[]).
 
 	constant('CC_API_NEIGHBORS_INFO','neighboursJSON?country={{ countryCode }}&').
 
-	factory('pubSub',['$rootScope',function($rootScope){
+/*	factory('pubSub',['$rootScope',function($rootScope){
 
 		return {
 
@@ -38,7 +38,7 @@ angular.module('ccLibrary',[]).
 
 		}
 
-	}]).
+	}]).*/
 
 	factory('ccApiCache',['$cacheFactory',function($cacheFactory){
 
@@ -69,73 +69,111 @@ angular.module('ccLibrary',[]).
 
 		var queryConfig = CC_API_CONFIG;
 
-		return function(path){
+		return { 
 
-			queryConfig.url = CC_API_URL + path + CC_API_PARAMS;
+			get : function(path){
 
-			var cache = ccApiCache.get(queryConfig.url);
-			
-			var defer = $q.defer();
+				queryConfig.url = CC_API_URL + path + CC_API_PARAMS;
+
+				var cache = ccApiCache.get(queryConfig.url);
+				
+				var defer = $q.defer();
 
 
-			if (cache){
+				if (cache){
 
-				defer.resolve(cache);
+					defer.resolve(cache);
 
-			} else {
+				} else {
 
-				$http(queryConfig).
+					$http(queryConfig).
 
-				success(function(data,status,headers,config){
+					success(function(data,status,headers,config){
 
-					ccApiCache.put(config.url,data);
+						ccApiCache.put(config.url,data);
 
-					defer.resolve(data);
+						defer.resolve(data);
 
-				}).
+					}).
 
-				error(function(error){
+					error(function(error){
 
-					defer.reject(error);
+						defer.reject(error);
 
-					$rootScope.$broadcast('error',queryConfig.url,error);
+						$rootScope.$broadcast('error',queryConfig.url,error);
 
-				});
+					});
+
+				}
+
+				return defer.promise;
+
+			},
+
+			cache : function(path,data){
+
+				var urlCachePath = CC_API_URL + path + CC_API_PARAMS;
+
+				ccApiCache.put( urlCachePath,data );
 
 			}
 
-			return defer.promise;
-
-		};
+		}
 
 	}]).
 
 	factory('ccCountriesInfo',['ccApiRequest','CC_API_COUNTRIES_INFO',function(ccApiRequest,CC_API_COUNTRIES_INFO){
 
-		return function(){
+		return {
 
-			return ccApiRequest(CC_API_COUNTRIES_INFO);
+			get : function(){
+
+				var path = CC_API_COUNTRIES_INFO;
+
+				return ccApiRequest.get( path );
+
+			}
 
 		};
 
 	}]).
 
-	factory('ccCountryInfo',['ccApiCache','ccApiRequest','CC_API_COUNTRY_INFO','$interpolate','pubSub',
-							function(ccApiCache,ccApiRequest,CC_API_COUNTRY_INFO,$interpolate,pubSub){
+	factory('ccCountryInfo',['$q','ccApiCache','ccApiRequest','CC_API_COUNTRY_INFO','$interpolate',
+							function($q,ccApiCache,ccApiRequest,CC_API_COUNTRY_INFO,$interpolate){
 
-		pubSub.listen('targetCountry',function(country){
+		return {
 
-			var path = $interpolate(CC_API_COUNTRY_INFO)({countryCode : country.countryCode});
+			get : function(cCode){
 
-			ccApiCache.put( path,country );
+				var defer = $q.defer();
 
-		});
+				var path = $interpolate(CC_API_COUNTRY_INFO)({countryCode : cCode});
 
-		return function(cCode){
+				ccApiRequest.get( path ).then(function(data){
 
-			var path = $interpolate(CC_API_COUNTRY_INFO)({countryCode : cCode});
+					if(data.hasOwnProperty('geonames')){
 
-			return ccApiRequest(path);
+						defer.resolve(data.geonames[0]);
+
+					} else {
+
+						defer.resolve(data);
+
+					}
+
+				});
+
+				return defer.promise;
+
+			},
+
+			cache : function(country){
+
+				var path = $interpolate(CC_API_COUNTRY_INFO)({countryCode : country.countryCode});
+
+				return ccApiRequest.cache ( path,country );
+
+			}
 
 		};
 
@@ -143,23 +181,33 @@ angular.module('ccLibrary',[]).
 
 	factory('ccCapitalInfo',['ccApiRequest','CC_API_CAPITAL_INFO','$interpolate',function(ccApiRequest,CC_API_CAPITAL_INFO,$interpolate){
 
-		return function(cCode){
+		return {
 
-			var path = $interpolate(CC_API_CAPITAL_INFO)({countryCode : cCode});
+			get : function(cCode){
 
-			return ccApiRequest(path);
+				var path = $interpolate(CC_API_CAPITAL_INFO)({countryCode : cCode});
+
+				return ccApiRequest.get( path );
+
+			}
 
 		};
+
+
 
 	}]).
 
 	factory('ccNeighborsInfo',['ccApiRequest','CC_API_NEIGHBORS_INFO','$interpolate',function(ccApiRequest,CC_API_NEIGHBORS_INFO,$interpolate){
 
-		return function(cCode){
+		return {
 
-			var path = $interpolate(CC_API_NEIGHBORS_INFO)({countryCode : cCode});
+			get : function(cCode){
 
-			return ccApiRequest(path);
+				var path = $interpolate(CC_API_NEIGHBORS_INFO)({countryCode : cCode});
+
+				return ccApiRequest.get( path );
+
+			}
 
 		};
 
