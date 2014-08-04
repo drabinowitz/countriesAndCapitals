@@ -40,10 +40,6 @@ gulp.task('autotest', function() {
       configFile: 'karma.conf.js',
       action: 'watch'
     }))
-    .on('error', function(err) {
-      // Make sure failed tests cause gulp to exit non-zero
-      throw err;
-    });
 });
 
 gulp.task('copy-html-files', function() {

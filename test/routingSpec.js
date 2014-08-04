@@ -23,31 +23,31 @@ describe('cc-app-views',function(){
 
 	});
 
-	ddescribe('/countries route', function(){
-
-		module(function($provide){
-
-			$provide.value('countries', function(){
-
-				return { geonames : [{
-
-					countryName : 'United States'
-
-				}]};
-
-			});
-
-		});
-
-        var ctrl, scope;
+	describe('/countries route', function(){
 
         beforeEach(inject(function($controller, $rootScope) {
+
+        	countries = { 
+
+        		geonames : [
+
+        			{
+
+						countryName : 'United States'
+
+					}
+
+				]
+
+			};
 
             scope = $rootScope.$new();
 
             ctrl = $controller('countriesCtrl', {
 
-                $scope : scope
+                $scope : scope,
+
+                countries : countries
 
             });
 
@@ -62,15 +62,13 @@ describe('cc-app-views',function(){
 
 			$httpBackend.expectGET('./countries/countries.html').respond('...');
 
+			$httpBackend.whenJSONP('http://api.geonames.org/countryInfoJSON?username=drabinowitz&callback=JSON_CALLBACK').respond('...');
+
 			$rootScope.$apply(function() {
                 $location.path('/countries');
             });
 
             $rootScope.$digest();
-
-            $httpBackend.flush();
-
-            $httpBackend.verifyNoOutstandingRequest();
 
             expect( scope.countries[0].countryName ).toBe('United States')
 
@@ -79,6 +77,58 @@ describe('cc-app-views',function(){
 	});
 
 	describe('/countries/{country} route', function(){
+
+		beforeEach(inject(function($controller, $rootScope) {
+
+        	countryInfo = { 
+
+				countryName : 'United States'
+
+			};
+
+			capitalInfo = {
+
+				geonames : [
+
+					{
+
+						name : 'Washington, DC'
+
+					}
+
+				]
+
+			};
+
+			neighborsInfo = {
+
+				geonames : [
+
+					{
+
+						countryName : 'Canada'
+
+					}
+
+				]
+
+			};
+
+            scope = $rootScope.$new();
+
+            ctrl = $controller('countryCtrl', {
+
+                $scope : scope,
+
+                countryInfo : countryInfo,
+
+                capitalInfo : capitalInfo,
+
+                neighborsInfo : neighborsInfo
+
+            });
+
+        }));
 
 		it('loads the country.html, resolves three requests for the country, and attaches the country controller',
 					inject(function($location,$rootScope,$httpBackend,$rootElement,$compile){
@@ -89,7 +139,11 @@ describe('cc-app-views',function(){
 
 			$httpBackend.expectGET('./countries/country/country.html').respond('...');
 
-			$httpBackend.whenJSONP('http://api.geonames.org/countryInfoJSON?username=drabinowitz&callback=JSON_CALLBACK').respond({});
+			$httpBackend.whenJSONP('http://api.geonames.org/countryInfoJSON?country=US&username=drabinowitz&callback=JSON_CALLBACK').respond('...');
+
+			$httpBackend.whenJSONP('http://api.geonames.org/searchJSON?country=US&q=capital%20of%20a%20political%20entity&username=drabinowitz&callback=JSON_CALLBACK').respond('...');
+			
+			$httpBackend.whenJSONP('http://api.geonames.org/neighboursJSON?country=US&username=drabinowitz&callback=JSON_CALLBACK').respond('...');
 
 			$rootScope.$apply(function() {
                 $location.path('/countries/US');
@@ -97,9 +151,11 @@ describe('cc-app-views',function(){
 
             $rootScope.$digest();
 
-            $httpBackend.flush();
+            expect( scope.country.countryName ).toBe( 'United States' );
 
-            $httpBackend.verifyNoOutstandingRequest();
+            expect( scope.capital.name ).toBe( 'Washington, DC' );
+
+            expect( scope.neighbors[0].countryName ).toBe( 'Canada' );
 
 		}));
 
