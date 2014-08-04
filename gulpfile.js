@@ -7,6 +7,44 @@ var minifyCss = require('gulp-minify-css');
 var usemin = require('gulp-usemin');
 var rev = require('gulp-rev');
 var clean = require('gulp-clean');
+var karma = require('gulp-karma');
+
+var testFiles = [
+  './app/bower_components/angular*/*.js',
+  './app/bower_components/jquery/dist/*.js',
+  './node_modules/jasmine-jquery/lib/*.js',
+  './app/*.js',
+  './app/home/*.js',
+  './app/countries/*.js',
+  './app/countries/country/*.js',
+  './test/*.js'
+];
+
+gulp.task('test', function() {
+  // Be sure to return the stream
+  return gulp.src(testFiles)
+    .pipe(karma({
+      configFile: 'karma.conf.js',
+      action: 'run'
+    }))
+    .on('error', function(err) {
+      // Make sure failed tests cause gulp to exit non-zero
+      throw err;
+    });
+});
+
+gulp.task('autotest', function() {
+  // Be sure to return the stream
+  return gulp.src(testFiles)
+    .pipe(karma({
+      configFile: 'karma.conf.js',
+      action: 'watch'
+    }))
+    .on('error', function(err) {
+      // Make sure failed tests cause gulp to exit non-zero
+      throw err;
+    });
+});
 
 gulp.task('copy-html-files', function() {
   gulp.src(['./app/**/*.html', '!./app/index.html'], {base: './app'})
