@@ -5,7 +5,7 @@ describe('cc-app-views',function(){
 	describe('/home route', function(){
 
 		it('loades the home.html content by default and on button click for Home',
-					inject(function($location,$rootScope,$httpBackend,$rootElement,$compile){
+		inject(function($location,$rootScope,$httpBackend,$rootElement,$compile){
 
 			var view = $compile('<div ng-view></div>')($rootScope);
 
