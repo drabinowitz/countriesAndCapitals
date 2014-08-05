@@ -122,11 +122,12 @@ angular.module('ccLibrary',[]).
 
 	}]).
 
-	factory('ccCountriesInfo',['ccApiRequest','CC_API_COUNTRIES_INFO',function(ccApiRequest,CC_API_COUNTRIES_INFO){
+	factory('ccCountriesInfo',['ccApiRequest','CC_API_COUNTRIES_INFO',
+						function(ccApiRequest,CC_API_COUNTRIES_INFO){
 
 		return {
 
-			get : function(){
+			get : function() {
 
 				var path = CC_API_COUNTRIES_INFO;
 
@@ -179,7 +180,8 @@ angular.module('ccLibrary',[]).
 
 	}]).
 
-	factory('ccCapitalInfo',['ccApiRequest','CC_API_CAPITAL_INFO','$interpolate',function(ccApiRequest,CC_API_CAPITAL_INFO,$interpolate){
+	factory('ccCapitalInfo',['ccApiRequest','CC_API_CAPITAL_INFO','$interpolate',
+						function(ccApiRequest,CC_API_CAPITAL_INFO,$interpolate){
 
 		return {
 
@@ -197,7 +199,8 @@ angular.module('ccLibrary',[]).
 
 	}]).
 
-	factory('ccNeighborsInfo',['ccApiRequest','CC_API_NEIGHBORS_INFO','$interpolate',function(ccApiRequest,CC_API_NEIGHBORS_INFO,$interpolate){
+	factory('ccNeighborsInfo',['ccApiRequest','CC_API_NEIGHBORS_INFO','$interpolate',
+							function(ccApiRequest,CC_API_NEIGHBORS_INFO,$interpolate){
 
 		return {
 
